@@ -58,7 +58,7 @@ async function main() {
       .remainingAccounts([
         {
           pubkey: investTracker,
-          isWritable: false,
+          isWritable: true,
           isSigner: false,
         },
       ])
