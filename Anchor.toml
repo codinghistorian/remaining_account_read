@@ -5,7 +5,7 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-remaining_account_read = "516r1c3Sn6dk9kNMy7tSb82JNzSAzU25vBTZ2UN6QKts"
+remaining_account_read = "86ns7oVZgY93vsJbj4V32ppWFDZmG9iuKG16CByz5cCf"
 
 [programs.localnet]
 remaining_account_read = "8CNhsS9KaAhuy2TdtLQowZNbhHQfL34CyHTJPjJSXAHP"

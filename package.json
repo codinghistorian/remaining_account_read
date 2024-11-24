@@ -4,11 +4,13 @@
     "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
     "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check",
     "init_and_read": "npx ts-node scripts/init_and_read.ts",
+    "read_whirlpool_price": "npx ts-node scripts/read_whirlpool_price_from_remaining.ts",
     "clean": "anchor clean && rm -rf target/*",
     "build": "anchor build",
     "sync": "anchor keys sync",
     "deploy": "anchor deploy",
-    "full-deploy": "npm run clean && rm -rf target/* && npm run build && npm run sync &&  npm run build && npm run deploy && ANCHOR_PROVIDER_URL=\"https://api.devnet.solana.com\" ANCHOR_WALLET=~/.config/solana/id.json npm run init_and_read"
+    "full-deploy": "npm run clean && rm -rf target/* && npm run build && npm run sync &&  npm run build && npm run deploy && ANCHOR_PROVIDER_URL=\"https://api.devnet.solana.com\" ANCHOR_WALLET=~/.config/solana/id.json npm run init_and_read",
+    "2full-deploy-read-whirlpool-price": "npm run clean && rm -rf target/* && npm run build && npm run sync &&  npm run build && npm run deploy && ANCHOR_PROVIDER_URL=\"https://api.devnet.solana.com\" ANCHOR_WALLET=~/.config/solana/id.json npm run read_whirlpool_price"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.30.1"

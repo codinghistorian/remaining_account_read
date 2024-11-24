@@ -27,5 +27,8 @@ pub enum ErrorCode {
     LossTooHigh,
 
     #[msg("Invalid strategy type")]
-    InvalidStrategyType
+    InvalidStrategyType,
+
+    #[msg("Deserialization error")]
+    DeserializationError,
 }
