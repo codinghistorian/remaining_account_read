@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use borsh::BorshDeserialize;
 use crate::state::whirlpool::*;
-
+use crate::utils::get_price_from_sqrt_price::*;
 #[derive(Accounts)]
 #[instruction()]
 pub struct ReadWhirlpoolPrice<'info> {
@@ -24,6 +24,9 @@ pub fn handle_read_whirlpool_price(ctx: Context<ReadWhirlpoolPrice>) -> Result<(
     msg!("Protocol fee rate: {}", whirlpool.protocol_fee_rate);
     msg!("Liquidity: {}", whirlpool.liquidity);
     msg!("Sqrt price: {}", whirlpool.sqrt_price);
+    msg!("Price: {}", get_price_from_sqrt_price(whirlpool.sqrt_price));
+    msg!("Price test: {}", test_get_price_from_sqrt_price(whirlpool.sqrt_price));
+    msg!("Squared price: {}", squared_sqrt_price(whirlpool.sqrt_price));
     msg!("Current tick index: {}", whirlpool.tick_current_index);
     msg!("Protocol fee owed A: {}", whirlpool.protocol_fee_owed_a);
     msg!("Protocol fee owed B: {}", whirlpool.protocol_fee_owed_b);

@@ -3,12 +3,14 @@ pub mod instructions;
 pub mod state;
 pub mod constants;
 pub mod error;
+pub mod utils;
 
 pub use constants::*;
 pub use instructions::*;
 pub use state::*;
 pub use error::*;
-declare_id!("86ns7oVZgY93vsJbj4V32ppWFDZmG9iuKG16CByz5cCf");
+pub use utils::*;
+declare_id!("HdozYi23uBwjLGJ3crheG8YT671Mf1EB4fYmjkAjWNgB");
 
 #[program]
 pub mod remaining_account_read {
