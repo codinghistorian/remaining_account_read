@@ -69,7 +69,10 @@ pub fn scaled_sqrt_price_divide_by_2_128(sqrt_price_x64: u128) -> U256 {
     // So price_x128_scaled >> 128 is the same as price_x128_scaled / 2^128
 }
 //initially made it return U256, but it's totally fine to return u128
-pub fn get_price_in_USDC_decimals(sqrt_price_x64: u128, a_decimals: u8, b_decimals: u8) -> u128 {
+pub fn get_price_in_USDC_decimals(sqrt_price_x64: u128, a_decimals: u8, b_decimals: u8) -> 
+// u128
+U256 
+{
     let price = U256::from(sqrt_price_x64);
     let price_x128 = price * price;
     let scaling_factor = U256::from(1_000_000_000_000_000_000_000u128); // 1e21
@@ -92,8 +95,100 @@ pub fn get_price_in_USDC_decimals(sqrt_price_x64: u128, a_decimals: u8, b_decima
     price_x128_scaled = price_x128_scaled * U256::from(10).pow(U256::from(b_decimals));
     price_x128_scaled = price_x128_scaled / U256::from(10).pow(U256::from(42));
 
-    price_x128_scaled.as_u128()
+    // price_x128_scaled.as_u128()
+    price_x128_scaled
 }
+
+pub fn get_inverted_price_in_USDC_decimals(
+    sqrt_price_x64: u128,
+    a_decimals: u8,
+    b_decimals: u8,
+) -> u128 {
+    let sqrt_price = U256::from(sqrt_price_x64);
+
+    // Compute sqrt_price^2 (P * 2^128)
+    let price_x128 = sqrt_price * sqrt_price;
+
+    // Scaling factor (1e21)
+    let scaling_factor = U256::from(1_000_000_000_000_000_000_000u128);
+
+    // Numerator: scaling_factor * 2^64
+    let numerator = scaling_factor << 64;
+
+    // Inverted price calculation
+    let mut inverted_price_x128 = numerator / price_x128;
+
+    inverted_price_x128 = inverted_price_x128 * scaling_factor;
+
+    inverted_price_x128 = inverted_price_x128 << 64;
+
+    // Adjust for decimals (reverse multiplication and division)
+    inverted_price_x128 = if a_decimals > b_decimals {
+        inverted_price_x128 / U256::from(10).pow(U256::from(a_decimals - b_decimals))
+    } else if a_decimals < b_decimals {
+        inverted_price_x128 * U256::from(10).pow(U256::from(b_decimals - a_decimals))
+    } else {
+        inverted_price_x128
+    };
+
+    // Scale by token A's decimals
+    inverted_price_x128 *= U256::from(10).pow(U256::from(a_decimals));
+
+    // Adjust scaling factor
+    inverted_price_x128 /= U256::from(10).pow(U256::from(42));
+
+    inverted_price_x128.as_u128()
+}
+
+pub fn get_price_and_reverse_decimals(sqrt_price_x64: u128, a_decimals: u8, b_decimals: u8) -> U256 {
+    let mut price = get_price_in_USDC_decimals(sqrt_price_x64, a_decimals, b_decimals);
+    let scaling_factor = U256::from(1_000_000_000_000_000_000_000u128); // 1e21
+    price = scaling_factor / price;
+    price
+
+    //well I do need to adjust decimals but let's first check the absolute number
+}
+
+
+pub fn get_price_in_USDC_decimals_when_USDC_is_token_a(sqrt_price_x64: u128, a_decimals: u8, b_decimals: u8) -> 
+// u128
+U256 
+{
+    let price = U256::from(sqrt_price_x64);
+    let price_x128 = price * price;
+    let scaling_factor = U256::from(1_000_000_000_000_000_000_000u128); // 1e21
+    let mut price_x128_scaled = price_x128 * scaling_factor;
+    price_x128_scaled = price_x128_scaled >> 64;
+    price_x128_scaled = price_x128_scaled * scaling_factor;
+    price_x128_scaled = price_x128_scaled >> 64;
+
+    price_x128_scaled = if a_decimals > b_decimals {
+        // Left shift is equivalent to multiplying by 2^(a_decimals - b_decimals)
+        price_x128_scaled * U256::from(10).pow(U256::from(a_decimals - b_decimals))
+    } else if a_decimals < b_decimals {
+        // Right shift is equivalent to dividing by 2^(b_decimals - a_decimals)
+        price_x128_scaled / U256::from(10).pow(U256::from(b_decimals - a_decimals))
+    } else {
+        price_x128_scaled
+    };
+
+    //then let's scale it by b's decimal, which in this scenario is of USDC
+    price_x128_scaled = price_x128_scaled * U256::from(10).pow(U256::from(a_decimals));
+    price_x128_scaled = price_x128_scaled / U256::from(10).pow(U256::from(42));
+
+    // price_x128_scaled.as_u128()
+    price_x128_scaled
+}
+
+pub fn get_price_and_reverse_decimals_when_USDC_is_token_a(sqrt_price_x64: u128, a_decimals: u8, b_decimals: u8) -> U256 {
+    let mut price = get_price_in_USDC_decimals_when_USDC_is_token_a(sqrt_price_x64, a_decimals, b_decimals);
+    let scaling_factor = U256::from(1_000_000_000_000_000_000_000u128); // 1e21
+    price = scaling_factor / price / U256::from(10).pow(U256::from(b_decimals));
+    price
+
+    //well I do need to adjust decimals but let's first check the absolute number
+}
+
 
 /// Adjusts the raw price based on the token decimals.
 ///

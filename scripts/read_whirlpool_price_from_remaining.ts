@@ -31,6 +31,8 @@ async function main() {
     const mint_a = new PublicKey("So11111111111111111111111111111111111111112"); // WSOL
     const mint_b = new PublicKey("BRjpCHtyQLNCo8gqRUr8jtdAj5AjPYQaoqbvcZiHok1k"); //dev USDC
 
+    const mint_TMAC = new PublicKey("Afn8YB1p4NsoZeS5XJBZ18LTfEy5NFPwN46wapZcBQr6");
+
     const whirlpoolAddress = whirlPool_WSOL_DEVUSDC;
 
 
@@ -42,19 +44,44 @@ async function main() {
     console.log("Reading whirlpool data from:", whirlpoolAddress.toBase58());
 
     // Call the read_whirlpool_price instruction
-    await program.methods
+    // await program.methods
+    //   .readWhirlpoolPrice()
+    //   .accounts({
+    //     signer: admin.publicKey,
+    //   })
+    //   .remainingAccounts([
+    //     {
+    //       pubkey: whirlpoolAddress,
+    //       isWritable: false,
+    //       isSigner: false
+    //     },
+    //     {
+    //       pubkey: mint_a,
+    //       isWritable: false,
+    //       isSigner: false
+    //     },
+    //     {
+    //       pubkey: mint_b,
+    //       isWritable: false,
+    //       isSigner: false
+    //     }
+    //   ])
+    //   .signers([admin])
+    //   .rpc();
+
+      await program.methods
       .readWhirlpoolPrice()
       .accounts({
         signer: admin.publicKey,
       })
       .remainingAccounts([
         {
-          pubkey: whirlpoolAddress,
+          pubkey: whirlPool_TMAC_DEVUSDC,
           isWritable: false,
           isSigner: false
         },
         {
-          pubkey: mint_a,
+          pubkey: mint_TMAC,
           isWritable: false,
           isSigner: false
         },
@@ -66,6 +93,7 @@ async function main() {
       ])
       .signers([admin])
       .rpc();
+
 
     // Since the program logs the data, you should see it in the transaction logs
     console.log("Successfully read whirlpool data");

@@ -37,8 +37,11 @@ pub fn handle_read_whirlpool_price(ctx: Context<ReadWhirlpoolPrice>) -> Result<(
     // msg!("Squared price: {}", squared_sqrt_price(whirlpool.sqrt_price));
     // msg!("Squared price U256: {:?}", squared_sqrt_price_return_U256(whirlpool.sqrt_price));
     // msg!("Squared price scaled U256: {:?}", squared_sqrt_price_scaled_return_U256(whirlpool.sqrt_price));
-    msg!("Scaled sqrt price divide by 2^128: {:?}", scaled_sqrt_price_divide_by_2_128(whirlpool.sqrt_price));
-    msg!("Price in USDC decimals: {}", get_price_in_USDC_decimals(whirlpool.sqrt_price, mint_a.decimals, mint_b.decimals));
+    // msg!("Scaled sqrt price divide by 2^128: {:?}", scaled_sqrt_price_divide_by_2_128(whirlpool.sqrt_price));
+    let sqrt_price = 35940832746436648129u128;
+    msg!("Inverted price in USDC decimals: {}", get_price_in_USDC_decimals_when_USDC_is_token_a(sqrt_price, 6, 9));
+    msg!("Price in USDC decimals when reversed: {:?}", get_price_and_reverse_decimals_when_USDC_is_token_a(sqrt_price, 6, 9));
+
     msg!("Current tick index: {}", whirlpool.tick_current_index);
     msg!("Protocol fee owed A: {}", whirlpool.protocol_fee_owed_a);
     msg!("Protocol fee owed B: {}", whirlpool.protocol_fee_owed_b);
