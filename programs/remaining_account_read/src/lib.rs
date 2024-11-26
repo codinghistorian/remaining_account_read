@@ -10,7 +10,7 @@ pub use instructions::*;
 pub use state::*;
 pub use error::*;
 pub use utils::*;
-declare_id!("HdozYi23uBwjLGJ3crheG8YT671Mf1EB4fYmjkAjWNgB");
+declare_id!("GRBXeLLbrfwLWA3JLoLk6XsMW6sEUWDHB6x1UyKeJ43z");
 
 #[program]
 pub mod remaining_account_read {

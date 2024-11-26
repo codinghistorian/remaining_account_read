@@ -24,9 +24,12 @@ pub fn handle_read_whirlpool_price(ctx: Context<ReadWhirlpoolPrice>) -> Result<(
     msg!("Protocol fee rate: {}", whirlpool.protocol_fee_rate);
     msg!("Liquidity: {}", whirlpool.liquidity);
     msg!("Sqrt price: {}", whirlpool.sqrt_price);
-    msg!("Price: {}", get_price_from_sqrt_price(whirlpool.sqrt_price));
-    msg!("Price test: {}", test_get_price_from_sqrt_price(whirlpool.sqrt_price));
-    msg!("Squared price: {}", squared_sqrt_price(whirlpool.sqrt_price));
+    // msg!("Price: {}", get_price_from_sqrt_price(whirlpool.sqrt_price));
+    // msg!("Price test: {}", test_get_price_from_sqrt_price(whirlpool.sqrt_price));
+    // msg!("Squared price: {}", squared_sqrt_price(whirlpool.sqrt_price));
+    // msg!("Squared price U256: {:?}", squared_sqrt_price_return_U256(whirlpool.sqrt_price));
+    // msg!("Squared price scaled U256: {:?}", squared_sqrt_price_scaled_return_U256(whirlpool.sqrt_price));
+    msg!("Scaled sqrt price divide by 2^128: {:?}", scaled_sqrt_price_divide_by_2_128(whirlpool.sqrt_price));
     msg!("Current tick index: {}", whirlpool.tick_current_index);
     msg!("Protocol fee owed A: {}", whirlpool.protocol_fee_owed_a);
     msg!("Protocol fee owed B: {}", whirlpool.protocol_fee_owed_b);

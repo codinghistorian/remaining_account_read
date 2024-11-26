@@ -43,6 +43,32 @@ pub fn squared_sqrt_price(sqrt_price_x64: u128) -> u128 {
     price_x128.as_u128()
 }
 
+pub fn squared_sqrt_price_return_U256(sqrt_price_x64: u128) -> U256 {
+    let price = U256::from(sqrt_price_x64);
+    let price_x128 = price * price;
+    price_x128
+}
+
+pub fn squared_sqrt_price_scaled_return_U256(sqrt_price_x64: u128) -> U256 {
+    let price = U256::from(sqrt_price_x64);
+    let price_x128 = price * price;
+    let scaling_factor = U256::from(1_000_000_000_000_000_000u128); // 1e18
+    let price_x128_scaled = price_x128 * scaling_factor;
+    price_x128_scaled
+}
+
+pub fn scaled_sqrt_price_divide_by_2_128(sqrt_price_x64: u128) -> U256 {
+    let price = U256::from(sqrt_price_x64);
+    let price_x128 = price * price;
+    let scaling_factor = U256::from(1_000_000_000_000_000_000_000u128); // 1e21
+    let mut price_x128_scaled = price_x128 * scaling_factor;
+    price_x128_scaled = price_x128_scaled >> 64;
+    price_x128_scaled = price_x128_scaled * scaling_factor;
+    price_x128_scaled >> 64
+    // Right bit shifting by n is equivalent to dividing by 2^n
+    // So price_x128_scaled >> 128 is the same as price_x128_scaled / 2^128
+}
+
 /// Adjusts the raw price based on the token decimals.
 ///
 /// # Arguments
