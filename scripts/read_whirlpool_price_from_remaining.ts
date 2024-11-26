@@ -26,8 +26,15 @@ async function main() {
     const program = anchor.workspace.RemainingAccountRead as Program<RemainingAccountRead>;
     console.log("Program ID:", program.programId.toBase58());
 
-    const whirlpoolAddress = new PublicKey("3KBZiL2g8C7tiJ32hTv5v3KM7aK9htpqTw4cTXz1HvPt");
-    
+    const whirlPool_WSOL_DEVUSDC = new PublicKey("3KBZiL2g8C7tiJ32hTv5v3KM7aK9htpqTw4cTXz1HvPt");
+    const whirlPool_TMAC_DEVUSDC = new PublicKey("H3xhLrSEyDFm6jjG42QezbvhSxF5YHW75VdGUnqeEg5y");
+    const mint_a = new PublicKey("So11111111111111111111111111111111111111112"); // WSOL
+    const mint_b = new PublicKey("BRjpCHtyQLNCo8gqRUr8jtdAj5AjPYQaoqbvcZiHok1k"); //dev USDC
+
+    const whirlpoolAddress = whirlPool_WSOL_DEVUSDC;
+
+
+
     if (!whirlpoolAddress) {
       throw new Error("Please provide WHIRLPOOL_ADDRESS environment variable");
     }
@@ -43,6 +50,16 @@ async function main() {
       .remainingAccounts([
         {
           pubkey: whirlpoolAddress,
+          isWritable: false,
+          isSigner: false
+        },
+        {
+          pubkey: mint_a,
+          isWritable: false,
+          isSigner: false
+        },
+        {
+          pubkey: mint_b,
           isWritable: false,
           isSigner: false
         }

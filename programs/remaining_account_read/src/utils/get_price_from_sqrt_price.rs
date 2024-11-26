@@ -69,6 +69,32 @@ pub fn scaled_sqrt_price_divide_by_2_128(sqrt_price_x64: u128) -> U256 {
     // So price_x128_scaled >> 128 is the same as price_x128_scaled / 2^128
 }
 
+pub fn get_price_in_USDC_decimals(sqrt_price_x64: u128, a_decimals: u8, b_decimals: u8) -> U256 {
+    let price = U256::from(sqrt_price_x64);
+    let price_x128 = price * price;
+    let scaling_factor = U256::from(1_000_000_000_000_000_000_000u128); // 1e21
+    let mut price_x128_scaled = price_x128 * scaling_factor;
+    price_x128_scaled = price_x128_scaled >> 64;
+    price_x128_scaled = price_x128_scaled * scaling_factor;
+    price_x128_scaled = price_x128_scaled >> 64;
+
+    price_x128_scaled = if a_decimals > b_decimals {
+        // Left shift is equivalent to multiplying by 2^(a_decimals - b_decimals)
+        price_x128_scaled * U256::from(10).pow(U256::from(a_decimals - b_decimals))
+    } else if a_decimals < b_decimals {
+        // Right shift is equivalent to dividing by 2^(b_decimals - a_decimals)
+        price_x128_scaled / U256::from(10).pow(U256::from(b_decimals - a_decimals))
+    } else {
+        price_x128_scaled
+    };
+
+    //then let's scale it by b's decimal, which in this scenario is of USDC
+    price_x128_scaled = price_x128_scaled * U256::from(10).pow(U256::from(b_decimals));
+    price_x128_scaled = price_x128_scaled / U256::from(10).pow(U256::from(42));
+
+    price_x128_scaled
+}
+
 /// Adjusts the raw price based on the token decimals.
 ///
 /// # Arguments
@@ -86,10 +112,10 @@ pub fn get_adjusted_price(
     decimals_b: u8,
 ) -> u128 {
     if decimals_a >= decimals_b {
-        // Divide by 10^(decimals_a - decimals_b)
-        raw_price / 10u128.pow((decimals_a - decimals_b) as u32)
+        // Multiply by 10^(decimals_a - decimals_b) for sqrt_price_x64
+        raw_price * 10u128.pow((decimals_a - decimals_b) as u32)
     } else {
-        // Multiply by 10^(decimals_b - decimals_a)
-        raw_price * 10u128.pow((decimals_b - decimals_a) as u32)
+        // Divide by 10^(decimals_b - decimals_a) for sqrt_price_x64
+        raw_price / 10u128.pow((decimals_b - decimals_a) as u32)
     }
 }
